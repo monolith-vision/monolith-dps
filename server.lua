@@ -9,7 +9,7 @@ local function processQueue()
 
   isProcessingQueue = true
 
-  CreateThread(function()
+  Citizen.CreateThread(function()
     while #requestQueue > 0 do
       local currentTime = GetGameTimer()
       if currentTime - lastApiCall < Config.apiCooldown then
@@ -210,7 +210,7 @@ end
 
 AddEventHandler("esx:playerLoaded", onPlayerLoaded)
 
-CreateThread(function()
+Citizen.CreateThread(function()
   local startupDelay = Config.startupDelay or 2500
   Wait(startupDelay)
 
@@ -266,7 +266,7 @@ RegisterCommand("refreshpermissions", function(source, args, rawCommand)
 end, false)
 
 if Config.debugMode then
-  CreateThread(function()
+  Citizen.CreateThread(function()
     while true do
       Wait(Config.queueMonitorInterval or 30000)
 

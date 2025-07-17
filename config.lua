@@ -4,8 +4,7 @@ Config = {
   guildId = "YOUR_GUILD_ID",                -- Your Discord server's Guild ID
   endpoint = "https://discord.com/api/v10", -- Discord API endpoint (leave as default)
 
-  -- Performance & Timing Settings
-  startupDelay = 2500, -- Delay before syncing existing players (milliseconds)
+  startupDelay = 2500,                      -- Delay before syncing existing players (milliseconds)
 
   -- Role Configuration
   -- IMPORTANT: Role priority is determined by ORDER in this table!
@@ -21,8 +20,6 @@ Config = {
 
     -- Add more roles here as needed:
     -- { id = "ROLE_ID_HERE", name = "moderator" },
-    -- { id = "ROLE_ID_HERE", name = "vip" },
-    -- { id = "ROLE_ID_HERE", name = "donor" },
   },
 
   -- The settings below are advanced settings and should not be changed unless you know what you are doing.
