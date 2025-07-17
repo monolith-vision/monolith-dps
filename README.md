@@ -227,7 +227,7 @@ If you encounter issues:
 
 ## 📄 License
 
-This project is open source. Feel free to modify and distribute according to your needs.
+Please refer to the LICENSE.md
 
 ---
 
