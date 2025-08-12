@@ -6,6 +6,10 @@ description 'Discord Permission Sync for FiveM'
 version '1.0.0'
 lua54 'yes'
 
+escrow_ignore {
+  'config.lua',
+}
+
 shared_scripts {
   '@es_extended/imports.lua',
 }

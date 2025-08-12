@@ -64,6 +64,7 @@ jobs:
         with:
           cookie: ${{ secrets.FORUM_COOKIE }}
           assetName: "monolith-dps"
+          assetId: 696759
           makeZip: true
 
   refresh_cookie:
