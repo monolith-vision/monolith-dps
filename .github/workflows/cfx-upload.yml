@@ -1,0 +1,78 @@
+name: CFX Portal Management
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  upload:
+    name: Upload to CFX Portal
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check for web folder
+        id: check_web
+        run: |
+          if [ -d "web" ]; then
+            echo "web_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "web_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_web.outputs.web_exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "web/package-lock.json"
+
+      - name: Install dependencies
+        if: steps.check_web.outputs.web_exists == 'true'
+        run: |
+          cd web
+          npm ci
+
+      - name: Build web application
+        if: steps.check_web.outputs.web_exists == 'true'
+        run: |
+          cd web
+          npm run build
+
+      - name: Clean web folder
+        if: steps.check_web.outputs.web_exists == 'true'
+        run: |
+          cd web
+          # Keep only dist folder and essential files
+          find . -type f -not -path "./dist/*" -not -name "package.json" -not -name "package-lock.json" -delete
+          find . -type d -empty -not -path "./dist*" -delete
+          # Remove node_modules and other build artifacts
+          rm -rf node_modules src public .vite vite.config.* tsconfig.* .eslint* .prettier* *.config.*
+
+      - name: Upload Escrow Resource
+        uses: Tynopia/cfx-portal-upload@main
+        with:
+          cookie: ${{ secrets.FORUM_COOKIE }}
+          assetName: "monolith-dps"
+          makeZip: true
+
+  refresh_cookie:
+    name: Refresh Cookie
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Login to Portal
+        uses: Tynopia/cfx-portal-upload@main
+        with:
+          cookie: ${{ secrets.FORUM_COOKIE }}
+          skipUpload: true
